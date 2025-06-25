@@ -24,8 +24,7 @@ public class User {
 
     @OneToMany(
             cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.EAGER
+            orphanRemoval = true
     )
     @JoinColumn(name = "user_id")
     List<Goal> goals = new ArrayList<>();

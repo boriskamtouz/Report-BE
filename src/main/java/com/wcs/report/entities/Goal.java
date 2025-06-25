@@ -29,10 +29,16 @@ public class Goal {
     @UpdateTimestamp
     private LocalDateTime updatedDate;
 
+    @ManyToOne(
+            cascade = CascadeType.ALL
+    )
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @OneToMany(
             mappedBy = "goal",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    List<CBElement> cbElements = new ArrayList<>();
+    private List<CBElement> cbElements = new ArrayList<>();
 }

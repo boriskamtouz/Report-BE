@@ -1,0 +1,9 @@
+package com.wcs.report.repository;
+
+import com.wcs.report.entities.Goal;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface GoalRepository extends JpaRepository<Goal, Long> {
+}
