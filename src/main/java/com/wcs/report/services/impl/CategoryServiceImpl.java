@@ -1,5 +1,6 @@
 package com.wcs.report.services.impl;
 
+import com.wcs.report.entities.Category;
 import com.wcs.report.payload.CategoryDTO;
 import com.wcs.report.repository.CategoryRepository;
 import com.wcs.report.services.CategoryService;
@@ -23,11 +24,17 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDTO> getAllCategories() {
-        return List.of();
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream().map(
+                category -> modelMapper.map(category, CategoryDTO.class)
+        ).toList();
     }
 
     @Override
     public CategoryDTO createCategory(CategoryDTO categoryDTO) {
-        return null;
+        Category category = new Category();
+        category.setName(categoryDTO.getName());
+        Category createdCategory = categoryRepository.save(category);
+        return modelMapper.map(createdCategory, CategoryDTO.class);
     }
 }

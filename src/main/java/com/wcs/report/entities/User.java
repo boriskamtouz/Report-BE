@@ -28,4 +28,11 @@ public class User {
     )
     @JoinColumn(name = "user_id")
     List<Goal> goals = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Report> reports;
 }
