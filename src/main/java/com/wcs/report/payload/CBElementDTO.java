@@ -1,17 +1,15 @@
 package com.wcs.report.payload;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CBElementDTO {
+    private String code;
     private String name;
     private String val;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }

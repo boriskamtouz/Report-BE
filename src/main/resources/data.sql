@@ -9,25 +9,24 @@ VALUES
 
 
 -- CREATION of many reports
-INSERT INTO report (id, created_at, updated_at, user_id)
-VALUES (1, '2025-06-17T10:00:00', '2025-06-17T10:00:00', 1);
+
 
 -- INSERT INTO cbelements table
-INSERT INTO cbelements ( name, val )
+INSERT INTO cbelements ( code, name, val )
 VALUES
-( 'Prière seule', '0' ),
-( 'Méditation', '0' ),
-( 'Lecture biblique', '0' ),
-( 'Lecture de la littérature chrétienne', '0' ),
-( 'Jeûne Partiel', '0' ),
-( 'Jeûne complet', '0' ),
-( 'Prière en Groupe', '0' ),
-( 'Dîme', '0' ),
-( 'Offrande', '0' ),
-( 'Heure étude', '0' ),
-( 'Heure de travail', '0' ),
-( 'évangélisation', '0' ),
-( 'Âme Gagnées', '0' );
+( 'PS', 'Prière seule', '0' ),
+( 'RDQAD', 'Méditation', '0' ),
+( 'LB', 'Lecture biblique', '0' ),
+( 'LLC', 'Lecture de la littérature chrétienne', '0' ),
+( 'JP', 'Jeûne Partiel', '0' ),
+( 'JC', 'Jeûne complet', '0' ),
+( 'PS', 'Prière en Groupe', '0' ),
+( 'DI', 'Dîme', '0' ),
+( 'OFF', 'Offrande', '0' ),
+( 'ET', 'Heure étude', '0' ),
+( 'TR', 'Heure de travail', '0' ),
+( 'EV', 'Evangélisation', '0' ),
+( 'AG', 'Âme Gagnées', '0' );
 
 
 -- INSERT INTO cbelements table
