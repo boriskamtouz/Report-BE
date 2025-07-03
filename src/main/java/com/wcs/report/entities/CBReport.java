@@ -9,24 +9,22 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "goals")
-public class Goal {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JoinColumn(name = "goal_id")
+@Entity
+public class CBReport {
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreationTimestamp
-    private LocalDateTime createdDate;
+    private String value;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedDate;
+    @ManyToOne
+    @JoinColumn(name = "report_id")
+    private Report report;
+
+
 
 }

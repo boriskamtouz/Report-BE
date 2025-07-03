@@ -35,4 +35,12 @@ public class User {
             orphanRemoval = true
     )
     private List<Report> reports;
+
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
+    )
+    @JoinColumn(name = "userId")
+    private SelectedCBElement selectedCBElement;
 }

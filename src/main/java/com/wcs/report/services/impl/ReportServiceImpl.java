@@ -37,22 +37,14 @@ public class ReportServiceImpl implements ReportService {
         report.setUpdatedAt(reportDTO.getUpdatedAt());
         report.setUser(user);
 
-        List<CBElement> cbElements = reportDTO.getCbElementDTOS()
-                .stream().map(
-                        cbElementDTO -> {
-                            CBElement cbElement = new CBElement();
-                            cbElement.setName(cbElementDTO.getName());
-                            cbElement.setVal(cbElementDTO.getVal());
-                            cbElement.setReport(report);
-                            return cbElement;
-                        }
-                ).toList();
 
-        report.setCbElements(cbElements);
+        return new ReportDTO();
+    }
 
-        Report savedReport = reportRepository.save(report);
-
-        return new ReportDTO().toDTO(savedReport);
+    @Override
+    public List<ReportDTO> getAllReports() {
+        List<Report> reports = reportRepository.findAll();
+        return List.of();
     }
 
 }

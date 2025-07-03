@@ -11,5 +11,4 @@ import java.time.LocalDateTime;
 public class CBElementDTO {
     private String code;
     private String name;
-    private String val;
 }

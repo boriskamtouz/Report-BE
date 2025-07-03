@@ -25,6 +25,7 @@ public class CBElementServiceImpl implements CBElementService {
     public CBElementDTO createCBElement(CBElementDTO cbElementDTO) {
         CBElement cbElement = new CBElement();
         cbElement.setName(cbElementDTO.getName());
+        cbElement.setCode(cbElementDTO.getCode());
         CBElement createdCBElement = cbElementRepository.save(cbElement);
         return modelMapper.map(createdCBElement, CBElementDTO.class);
     }

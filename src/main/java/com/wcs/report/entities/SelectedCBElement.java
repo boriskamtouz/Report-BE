@@ -9,34 +9,33 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "reports")
-public class Report {
+@Entity
+public class SelectedCBElement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at")
+    @Column(nullable = false, name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToOne
-    private User user;
-
     @OneToMany(
-            mappedBy = "report",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
+            orphanRemoval = true
     )
-    List<CBReport> cbReports = new ArrayList<>();
+    List<CBElement> cbElements;
+
+
+    private Long userId;
+
 }
