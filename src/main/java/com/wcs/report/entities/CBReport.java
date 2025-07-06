@@ -14,17 +14,17 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity(name = "cb_reports")
 public class CBReport {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String value;
+    private String val;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    private CBElement cbElement;
 
     @ManyToOne
     @JoinColumn(name = "report_id")
     private Report report;
-
-
-
 }

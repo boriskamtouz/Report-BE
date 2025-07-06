@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "users")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +25,7 @@ public class User {
 
     @OneToMany(
             cascade = CascadeType.ALL,
+
             orphanRemoval = true
     )
     @JoinColumn(name = "user_id")

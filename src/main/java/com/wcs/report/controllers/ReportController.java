@@ -29,6 +29,8 @@ public class ReportController {
     public ResponseEntity<List<ReportDTO>> getAllReports() {
         return new ResponseEntity<>(reportService.getAllReports(), HttpStatus.OK);
     }
+
+
 }
 
 

@@ -3,6 +3,7 @@ package com.wcs.report.payload;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -11,5 +12,5 @@ import java.util.List;
 public class SelectedCBElementDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<CBElementDTO> cbElementDTOS;
+    private List<CBElementDTO> cbElementDTOS = new ArrayList<>();
 }

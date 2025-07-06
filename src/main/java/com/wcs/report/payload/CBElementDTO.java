@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CBElementDTO {
+    private Long id;
     private String code;
     private String name;
 }

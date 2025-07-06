@@ -30,12 +30,9 @@ public class SelectedCBElement {
     private LocalDateTime updatedAt;
 
     @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+            cascade = CascadeType.ALL
     )
     List<CBElement> cbElements;
 
-
     private Long userId;
-
 }
