@@ -1,5 +1,6 @@
 package com.wcs.report.services;
 
+import com.wcs.report.mappers.CBReportUpdateDTO;
 import com.wcs.report.payload.CBReportDTO;
 
 public interface CBReportService {
@@ -10,5 +11,10 @@ public interface CBReportService {
             CBReportDTO cbReportDTO
     );
 
-    CBReportDTO updateCBReport(Long cbReportId, String newValue);
+    CBReportDTO updateCBReport(
+            Long reportId,
+            Long cbId,
+            CBReportUpdateDTO cbReportUpdateDTO
+    );
+
 }

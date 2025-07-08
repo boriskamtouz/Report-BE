@@ -2,6 +2,7 @@ package com.wcs.report.services.impl;
 
 import com.wcs.report.entities.*;
 import com.wcs.report.mappers.CBReportMapper;
+import com.wcs.report.mappers.CBReportUpdateDTO;
 import com.wcs.report.payload.CBReportDTO;
 import com.wcs.report.payload.DailyReportDTO;
 import com.wcs.report.payload.DailyReportResponseDTO;
@@ -9,19 +10,19 @@ import com.wcs.report.repository.DailyReportRepository;
 import com.wcs.report.repository.SelectedCBElementRepository;
 import com.wcs.report.repository.UserRepository;
 import com.wcs.report.services.DailyReportService;
-import org.modelmapper.ModelMapper;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class DailyReportServiceImpl implements DailyReportService {
     private final DailyReportRepository reportRepository;
     private final UserRepository userRepository;
-    private final ModelMapper modelMapper;
     private final CBReportMapper cbReportMapper;
     private final SelectedCBElementRepository selectedCBElementRepository;
 
@@ -30,11 +31,10 @@ public class DailyReportServiceImpl implements DailyReportService {
     public DailyReportServiceImpl(
             DailyReportRepository reportRepository,
             UserRepository userRepository,
-            ModelMapper modelMapper, CBReportMapper cbReportMapper, SelectedCBElementRepository selectedCBElementRepository
+            CBReportMapper cbReportMapper, SelectedCBElementRepository selectedCBElementRepository
     ) {
         this.reportRepository = reportRepository;
         this.userRepository = userRepository;
-        this.modelMapper = modelMapper;
         this.cbReportMapper = cbReportMapper;
         this.selectedCBElementRepository = selectedCBElementRepository;
     }
@@ -52,12 +52,9 @@ public class DailyReportServiceImpl implements DailyReportService {
 
         Set<CBReport> cbReports = new HashSet<>();
 
-       SelectedCBElement selectedCBElement = selectedCBElementRepository.findByUserId(userId);
+        SelectedCBElement selectedCBElement = selectedCBElementRepository.findByUserId(userId);
 
-       Set<CBElement> userCBElements = selectedCBElement.getCbElements();
-
-        System.out.println("User selected: " + userCBElements);
-
+        Set<CBElement> userCBElements = selectedCBElement.getCbElements();
 
         if (userCBElements == null || userCBElements.isEmpty()) {
             throw new RuntimeException("User has not selected CB elements");
@@ -67,6 +64,7 @@ public class DailyReportServiceImpl implements DailyReportService {
             CBReport cbReport = new CBReport();
             cbReport.setVal("0"); // TODO: Voir cette valeur ne doit pas changer
             cbReport.setCbElement(cbElement);
+            cbReport.setDailyReport(report);
             cbReports.add(cbReport);
         }
 
@@ -78,23 +76,101 @@ public class DailyReportServiceImpl implements DailyReportService {
         dailyReportResponseDTO.setCreatedAt(dailyReport.getCreatedAt());
         dailyReportResponseDTO.setUpdatedAt(dailyReport.getUpdatedAt());
 
-        Set<CBReportDTO> cbReportSet = new HashSet<>();
+        Set<CBReportDTO> cbReportDTOS = new HashSet<>();
         for (CBReport cbReport : dailyReport.getCbReports()) {
             CBReport r = new CBReport();
             r.setVal(cbReport.getVal());
             r.setCbElement(cbReport.getCbElement());
-            cbReportSet.add(cbReportMapper.toDTO(cbReport));
+            r.setDailyReport(dailyReport);
+            cbReportDTOS.add(cbReportMapper.toDTO(cbReport));
         }
 
-        dailyReportResponseDTO.setReports(cbReportSet);
+        dailyReportResponseDTO.setReports(cbReportDTOS);
 
         return dailyReportResponseDTO;
     }
 
     @Override
-    public List<DailyReportDTO> getAllReports() {
-        List<DailyReport> reports = reportRepository.findAll();
-        return List.of();
+    public DailyReportResponseDTO getDailyReportById(Long userId, Long dailyReportId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        DailyReport dailyReport = reportRepository.findByIdAndUser(userId, user)
+                .orElseThrow(() -> new EntityNotFoundException("Report not found"));
+
+        DailyReportResponseDTO dailyReportResponseDTO = new DailyReportResponseDTO();
+        dailyReportResponseDTO.setCreatedAt(dailyReport.getCreatedAt());
+        dailyReportResponseDTO.setUpdatedAt(dailyReport.getUpdatedAt());
+        Set<CBReportDTO> cbReportDTOS = new HashSet<>();
+        for (CBReport cbReport : dailyReport.getCbReports()) {
+            CBReport r = new CBReport();
+            r.setVal(cbReport.getVal());
+            r.setCbElement(cbReport.getCbElement());
+            r.setDailyReport(dailyReport);
+            cbReportDTOS.add(cbReportMapper.toDTO(cbReport));
+        }
+        dailyReportResponseDTO.setReports(cbReportDTOS);
+
+        return dailyReportResponseDTO;
+    }
+
+    @Override
+    public DailyReportResponseDTO updateDailyReport(Long userId, Long dailyReportId, List<CBReportUpdateDTO> cbReportDTOS) {
+        User user = checkIfUserExist(userId);
+
+        DailyReport foundedDailyReport = user.getReports().stream()
+                .filter(dailyReport -> dailyReport.getId().equals(dailyReportId))
+                .findFirst().orElseThrow(() -> new EntityNotFoundException("Daily report not found"));
+
+        foundedDailyReport.setUpdatedAt(LocalDateTime.now());
+
+        Set<CBReport> cbReports = foundedDailyReport.getCbReports()
+                .stream().collect(Collectors.toSet());
+
+        Map<Long, CBReport> cbReportMap = foundedDailyReport.getCbReports()
+                .stream().collect(Collectors.toMap(
+                        r -> r.getCbElement().getId(),
+                        Function.identity()
+                ));
+
+        for (CBReportUpdateDTO cbReportDTO : cbReportDTOS) {
+            CBReport cbReport = cbReportMap.get(cbReportDTO.getCbElementId());
+            if (cbReport != null) {
+                cbReport.setVal(cbReportDTO.getVal());
+            } else {
+                throw new EntityNotFoundException("CB report not found");
+            }
+        }
+
+       DailyReport updatedDailyReport = reportRepository.save(foundedDailyReport);
+
+        DailyReportResponseDTO dailyReportResponseDTO = new DailyReportResponseDTO();
+        dailyReportResponseDTO.setCreatedAt(updatedDailyReport.getCreatedAt());
+        dailyReportResponseDTO.setUpdatedAt(updatedDailyReport.getUpdatedAt());
+        Set<CBReportDTO> newCBReportsDTO = new HashSet<>();
+        for (CBReport cbReport : updatedDailyReport.getCbReports()) {
+            CBReport r = new CBReport();
+            r.setVal(cbReport.getVal());
+            r.setCbElement(cbReport.getCbElement());
+            r.setDailyReport(updatedDailyReport);
+            newCBReportsDTO.add(cbReportMapper.toDTO(cbReport));
+        }
+        dailyReportResponseDTO.setReports(newCBReportsDTO);
+
+        return dailyReportResponseDTO;
+    }
+
+
+    public User checkIfUserExist(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        return user;
+    }
+
+    public DailyReport checkIfDailyReportExist(Long dailyReportId) {
+        DailyReport dailyReport = reportRepository.findById(dailyReportId)
+                .orElseThrow(() -> new EntityNotFoundException("Report not found"));
+        return dailyReport;
     }
 
 }

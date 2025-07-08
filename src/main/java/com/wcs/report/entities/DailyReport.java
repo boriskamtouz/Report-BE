@@ -16,7 +16,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "reports")
+@Entity(name = "daily_reports")
 public class DailyReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,7 @@ public class DailyReport {
     private User user;
 
     @OneToMany(
-            mappedBy = "report",
+            mappedBy = "dailyReport",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER,
             orphanRemoval = true

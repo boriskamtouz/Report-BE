@@ -1,5 +1,6 @@
 package com.wcs.report.controllers;
 
+import com.wcs.report.mappers.CBReportUpdateDTO;
 import com.wcs.report.payload.CBReportDTO;
 import com.wcs.report.services.CBReportService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,5 +26,17 @@ public class CBReportController {
             @RequestBody CBReportDTO cbReportDTO
     ) {
         return new ResponseEntity<>(cbReportService.createCBReport(userId, cbId, reportId, cbReportDTO), HttpStatus.CREATED);
+    }
+
+    @PutMapping("dailyReports/{dailyReportId}/{cbReportId}/cbReports")
+    public ResponseEntity<CBReportDTO> updateCBReport(
+            @PathVariable(name = "dailyReportId") Long dailyReportId,
+            @PathVariable(name = "cbReportId") Long cbReportId,
+            @RequestBody CBReportUpdateDTO cbReportUpdateDTO
+    ) {
+        return new ResponseEntity<>(
+                cbReportService.updateCBReport(dailyReportId, cbReportId, cbReportUpdateDTO),
+                HttpStatus.OK
+        );
     }
 }

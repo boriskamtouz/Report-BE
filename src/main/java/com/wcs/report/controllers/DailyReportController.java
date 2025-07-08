@@ -1,5 +1,6 @@
 package com.wcs.report.controllers;
 
+import com.wcs.report.mappers.CBReportUpdateDTO;
 import com.wcs.report.payload.DailyReportDTO;
 import com.wcs.report.payload.DailyReportResponseDTO;
 import com.wcs.report.services.DailyReportService;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/public")
 public class DailyReportController {
 
     private final DailyReportService reportService;
@@ -21,7 +22,7 @@ public class DailyReportController {
         this.reportService = reportService;
     }
 
-    @PostMapping("{userId}/reports")
+    @PostMapping("users/{userId}/dailyReports")
     public ResponseEntity<DailyReportResponseDTO> createReport(
             @PathVariable(name = "userId") Long userId,
             @RequestBody DailyReportDTO reportDTO
@@ -29,9 +30,22 @@ public class DailyReportController {
         return new ResponseEntity<>(reportService.createDailyReport(userId, reportDTO), HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<DailyReportDTO>> getAllReports() {
-        return new ResponseEntity<>(reportService.getAllReports(), HttpStatus.OK);
+    @PutMapping("users/{userId}/dailyReports/{reportId}")
+    public ResponseEntity<DailyReportResponseDTO> updateReport(
+            @PathVariable Long userId,
+            @PathVariable Long reportId,
+            @RequestBody List<CBReportUpdateDTO> cbReportUpdateDTOs
+    ) {
+        return new ResponseEntity<>(reportService.updateDailyReport(userId, reportId, cbReportUpdateDTOs), HttpStatus.OK);
+    }
+
+
+    @GetMapping("dailyReports/{userId}/{dailyReportId}")
+    public ResponseEntity<DailyReportResponseDTO> getDailyReportById(
+            @PathVariable(name = "userId") Long userId,
+            @PathVariable(name = "dailyReportId") Long dailyReportId
+    ) {
+        return new ResponseEntity<>(reportService.getDailyReportById(userId, dailyReportId), HttpStatus.OK);
     }
 
 }

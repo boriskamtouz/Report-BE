@@ -1,10 +1,7 @@
 package com.wcs.report.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -21,6 +18,6 @@ public class CBReport {
     private CBElement cbElement;
 
     @ManyToOne
-    @JoinColumn(name = "report_id")
-    private DailyReport report;
+    @JoinColumn(name = "daily_report_id")
+    private DailyReport dailyReport;
 }
