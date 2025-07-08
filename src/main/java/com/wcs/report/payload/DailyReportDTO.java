@@ -1,21 +1,17 @@
 package com.wcs.report.payload;
 
-import com.wcs.report.entities.Report;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReportDTO {
+public class DailyReportDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private List<CBElementDTO> cbElementDTOS;
-
 }

@@ -9,7 +9,9 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,7 +34,7 @@ public class SelectedCBElement {
     @OneToMany(
             cascade = CascadeType.ALL
     )
-    List<CBElement> cbElements;
+    Set<CBElement> cbElements = new HashSet<>();
 
     private Long userId;
 }

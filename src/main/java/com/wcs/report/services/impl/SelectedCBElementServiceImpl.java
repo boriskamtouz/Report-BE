@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -61,7 +62,7 @@ public class SelectedCBElementServiceImpl implements SelectedCBElementService {
 
         SelectedCBElement foundedSelectedCBElements = checkIfSelectedCBElementExistForUser(userId);
 
-        List<CBElement> userCBElements = foundedSelectedCBElements.getCbElements();
+        Set<CBElement> userCBElements = foundedSelectedCBElements.getCbElements();
 
 
         if (cbElementRepository.existsByCode(cbElementDTO.getCode())) {
@@ -84,7 +85,7 @@ public class SelectedCBElementServiceImpl implements SelectedCBElementService {
 
         SelectedCBElement foundedSelectedCBElements = checkIfSelectedCBElementExistForUser(userId);
 
-        List<CBElement> userCBElements = foundedSelectedCBElements.getCbElements();
+        Set<CBElement> userCBElements = foundedSelectedCBElements.getCbElements();
         CBElement cbElement = selectedElementMapper.toEntity(cbElementDTO);
 
         userCBElements.removeIf(cbE -> cbE.getId().equals(cbElement.getId()));

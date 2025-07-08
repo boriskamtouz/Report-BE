@@ -9,6 +9,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface SelectedElementMapper {
@@ -18,8 +19,8 @@ public interface SelectedElementMapper {
     @Mapping(target = "cbElementDTOS", source = "cbElements")
     SelectedCBElementDTO toDTO(SelectedCBElement entity);
 
-    List<CBElement> toCBElementList(List<CBElementDTO> dtos);
-    List<CBElementDTO> toCBElementDTOList(List<CBElement> entities);
+    Set<CBElement> toCBElementList(Set<CBElementDTO> dtos);
+    Set<CBElementDTO> toCBElementDTOList(Set<CBElement> entities);
 
     CBElement toEntity(CBElementDTO dto);
 

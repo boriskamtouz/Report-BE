@@ -9,15 +9,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "reports")
-public class Report {
+public class DailyReport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -36,7 +36,8 @@ public class Report {
     @OneToMany(
             mappedBy = "report",
             cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER
+            fetch = FetchType.EAGER,
+            orphanRemoval = true
     )
-    List<CBReport> cbReports = new ArrayList<>();
+    Set<CBReport> cbReports = new HashSet<>();
 }

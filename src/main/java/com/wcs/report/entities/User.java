@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,18 +26,18 @@ public class User {
 
     @OneToMany(
             cascade = CascadeType.ALL,
-
             orphanRemoval = true
     )
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "goal_id")
     List<Goal> goals = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
             orphanRemoval = true
     )
-    private List<Report> reports;
+    private Set<DailyReport> reports;
 
     @OneToOne(
             cascade = CascadeType.ALL,

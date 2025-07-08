@@ -1,18 +1,19 @@
 package com.wcs.report.payload;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SelectedCBElementDTO {
+public class DailyReportResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Set<CBElementDTO> cbElementDTOS = new HashSet<>();
+    private Set<CBReportDTO> reports;
 }
