@@ -13,4 +13,6 @@ public interface DailyReportService {
 
     DailyReportResponseDTO updateDailyReport(Long userId, Long dailyReportId, List<CBReportUpdateDTO> cbReportDTOS);
 
+    List<DailyReportResponseDTO> getDailyReportsByUser(Long userId);
+
 }

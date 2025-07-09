@@ -72,20 +72,7 @@ public class DailyReportServiceImpl implements DailyReportService {
 
         DailyReport dailyReport = reportRepository.save(report);
 
-        DailyReportResponseDTO dailyReportResponseDTO = new DailyReportResponseDTO();
-        dailyReportResponseDTO.setCreatedAt(dailyReport.getCreatedAt());
-        dailyReportResponseDTO.setUpdatedAt(dailyReport.getUpdatedAt());
-
-        Set<CBReportDTO> cbReportDTOS = new HashSet<>();
-        for (CBReport cbReport : dailyReport.getCbReports()) {
-            CBReport r = new CBReport();
-            r.setVal(cbReport.getVal());
-            r.setCbElement(cbReport.getCbElement());
-            r.setDailyReport(dailyReport);
-            cbReportDTOS.add(cbReportMapper.toDTO(cbReport));
-        }
-
-        dailyReportResponseDTO.setReports(cbReportDTOS);
+        DailyReportResponseDTO dailyReportResponseDTO = getDailyReportResponseDTO(dailyReport);
 
         return dailyReportResponseDTO;
     }
@@ -98,18 +85,7 @@ public class DailyReportServiceImpl implements DailyReportService {
         DailyReport dailyReport = reportRepository.findByIdAndUser(userId, user)
                 .orElseThrow(() -> new EntityNotFoundException("Report not found"));
 
-        DailyReportResponseDTO dailyReportResponseDTO = new DailyReportResponseDTO();
-        dailyReportResponseDTO.setCreatedAt(dailyReport.getCreatedAt());
-        dailyReportResponseDTO.setUpdatedAt(dailyReport.getUpdatedAt());
-        Set<CBReportDTO> cbReportDTOS = new HashSet<>();
-        for (CBReport cbReport : dailyReport.getCbReports()) {
-            CBReport r = new CBReport();
-            r.setVal(cbReport.getVal());
-            r.setCbElement(cbReport.getCbElement());
-            r.setDailyReport(dailyReport);
-            cbReportDTOS.add(cbReportMapper.toDTO(cbReport));
-        }
-        dailyReportResponseDTO.setReports(cbReportDTOS);
+        DailyReportResponseDTO dailyReportResponseDTO = getDailyReportResponseDTO(dailyReport);
 
         return dailyReportResponseDTO;
     }
@@ -142,8 +118,26 @@ public class DailyReportServiceImpl implements DailyReportService {
             }
         }
 
-       DailyReport updatedDailyReport = reportRepository.save(foundedDailyReport);
+        DailyReport updatedDailyReport = reportRepository.save(foundedDailyReport);
 
+        DailyReportResponseDTO dailyReportResponseDTO = getDailyReportResponseDTO(updatedDailyReport);
+
+        return dailyReportResponseDTO;
+    }
+
+    @Override
+    public List<DailyReportResponseDTO> getDailyReportsByUser(Long userId) {
+        User user = checkIfUserExist(userId);
+        List<DailyReport> dailyReports = reportRepository.findByUser(user);
+        List<DailyReportResponseDTO> dailyReportResponseDTOS = new ArrayList<>();
+        for (DailyReport dailyReport : dailyReports) {
+            DailyReportResponseDTO dailyReportResponseDTO = getDailyReportResponseDTO(dailyReport);
+            dailyReportResponseDTOS.add(dailyReportResponseDTO);
+        }
+        return dailyReportResponseDTOS;
+    }
+
+    private DailyReportResponseDTO getDailyReportResponseDTO(DailyReport updatedDailyReport) {
         DailyReportResponseDTO dailyReportResponseDTO = new DailyReportResponseDTO();
         dailyReportResponseDTO.setCreatedAt(updatedDailyReport.getCreatedAt());
         dailyReportResponseDTO.setUpdatedAt(updatedDailyReport.getUpdatedAt());
@@ -156,21 +150,18 @@ public class DailyReportServiceImpl implements DailyReportService {
             newCBReportsDTO.add(cbReportMapper.toDTO(cbReport));
         }
         dailyReportResponseDTO.setReports(newCBReportsDTO);
-
         return dailyReportResponseDTO;
     }
 
 
     public User checkIfUserExist(Long userId) {
-        User user = userRepository.findById(userId)
+        return userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
-        return user;
     }
 
     public DailyReport checkIfDailyReportExist(Long dailyReportId) {
-        DailyReport dailyReport = reportRepository.findById(dailyReportId)
+        return reportRepository.findById(dailyReportId)
                 .orElseThrow(() -> new EntityNotFoundException("Report not found"));
-        return dailyReport;
     }
 
 }

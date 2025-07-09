@@ -39,8 +39,15 @@ public class DailyReportController {
         return new ResponseEntity<>(reportService.updateDailyReport(userId, reportId, cbReportUpdateDTOs), HttpStatus.OK);
     }
 
+    @GetMapping("users/{userId}/dailyReports")
+    public ResponseEntity<List<DailyReportResponseDTO>> getDailyReportsByUser(
+            @PathVariable(name = "userId") Long userId
+    ) {
+        return new ResponseEntity<>(reportService.getDailyReportsByUser(userId), HttpStatus.OK);
+    }
 
-    @GetMapping("dailyReports/{userId}/{dailyReportId}")
+
+    @GetMapping("users/{userId}/{dailyReportId}")
     public ResponseEntity<DailyReportResponseDTO> getDailyReportById(
             @PathVariable(name = "userId") Long userId,
             @PathVariable(name = "dailyReportId") Long dailyReportId

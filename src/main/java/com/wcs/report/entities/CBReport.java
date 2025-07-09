@@ -9,12 +9,13 @@ import lombok.*;
 @AllArgsConstructor
 @Entity(name = "cb_reports")
 public class CBReport {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String val = "0";
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private CBElement cbElement;
 
     @ManyToOne
